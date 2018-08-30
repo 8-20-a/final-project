@@ -3,15 +3,27 @@ const express = require('express');
 const path = require('path');
 const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
+let mongoose = require('mongoose');
+let passport = require('passport');
 const app = express();
 
 // PRODUCTION ONLY
 app.use(express.static(path.join(__dirname, 'client/build')));
 
+// models
+require('./models/users');
+
+let users = require('./routes/users');
+
+
 // app middleware
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(cookieParser())
+app.use(passport.initialize());
+app.use('/users', users);
+
+// mongoose.connect('mongodb://isaac:123@ds135540.mlab.com:35540/test-db');
 
 // PRODUCTION ONLY
 app.get('*', (req, res) => {
